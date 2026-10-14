@@ -1,0 +1,509 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:v="clr-namespace:AutoInstallAll.Views">
+
+    <!-- =====================================================================
+         Concept 2 — Warm Pastel Minimalist Bento
+         ===================================================================== -->
+    <Color x:Key="CreamColor">#FAF7F5</Color>
+    <Color x:Key="BeigeColor">#EFEAE4</Color>
+    <Color x:Key="InkColor">#111111</Color>
+    <Color x:Key="MutedColor">#4B5563</Color>
+
+    <SolidColorBrush x:Key="CreamBrush" Color="{StaticResource CreamColor}" />
+    <SolidColorBrush x:Key="BeigeBrush" Color="{StaticResource BeigeColor}" />
+    <SolidColorBrush x:Key="InkBrush" Color="{StaticResource InkColor}" />
+    <SolidColorBrush x:Key="MutedBrush" Color="{StaticResource MutedColor}" />
+    <SolidColorBrush x:Key="WhiteBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="LineBrush" Color="#E3DCD3" />
+    <SolidColorBrush x:Key="BeigeDeepBrush" Color="#E2DBD2" />
+
+    <SolidColorBrush x:Key="PinkBrush" Color="#F4C5C7" />
+    <SolidColorBrush x:Key="PeachBrush" Color="#FCE0C1" />
+    <SolidColorBrush x:Key="LavenderBrush" Color="#D4D4FA" />
+    <SolidColorBrush x:Key="MintBrush" Color="#C3F0DC" />
+    <SolidColorBrush x:Key="PinkSoftBrush" Color="#FBE3E4" />
+    <SolidColorBrush x:Key="PinkStrongBrush" Color="#EE8C95" />
+
+    <SolidColorBrush x:Key="SuccessBrush" Color="#047857" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#B91C1C" />
+    <SolidColorBrush x:Key="DangerSoftBrush" Color="#FDE2E2" />
+
+    <FontFamily x:Key="DisplayFont">Segoe UI Variable Display, Segoe UI</FontFamily>
+    <FontFamily x:Key="TextFont">Segoe UI Variable Text, Segoe UI</FontFamily>
+    <FontFamily x:Key="IconFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+    <!-- == Converters == -->
+    <v:PathToImageConverter x:Key="PathToImage" />
+    <v:EnumToBoolConverter x:Key="EnumToBool" />
+    <v:EnumToVisibilityConverter x:Key="EnumToVisibility" />
+    <v:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+    <v:NullToVisibilityConverter x:Key="NullToVisibility" />
+    <v:InitialConverter x:Key="Initial" />
+    <v:ColorGroupToBrushConverter x:Key="ColorGroupToBrush" />
+    <v:StateToBrushConverter x:Key="StateToBrush" />
+
+    <!-- == Typography == -->
+    <Style x:Key="H1" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        <Setter Property="FontSize" Value="44" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="LineHeight" Value="48" />
+        <Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
+    </Style>
+    <Style x:Key="H2" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="H3" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="Body" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="Caption" TargetType="TextBlock" BasedOn="{StaticResource Body}">
+        <Setter Property="FontSize" Value="11.5" />
+    </Style>
+    <Style x:Key="Icon" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+    <!-- == Buttons (viên thuốc) == -->
+    <Style x:Key="PillButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource BeigeBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="18,10" />
+        <Setter Property="FontSize" Value="13.5" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" CornerRadius="22" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center" RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.85" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.7" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.45" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource InkBrush}" />
+                            <Setter TargetName="Bd" Property="BorderThickness" Value="1.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="PillDark" TargetType="Button" BasedOn="{StaticResource PillButton}">
+        <Setter Property="Background" Value="{StaticResource InkBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
+    </Style>
+    <Style x:Key="PillWhite" TargetType="Button" BasedOn="{StaticResource PillButton}">
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+    </Style>
+    <Style x:Key="PillDanger" TargetType="Button" BasedOn="{StaticResource PillButton}">
+        <Setter Property="Background" Value="{StaticResource DangerSoftBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+    </Style>
+    <Style x:Key="PillSmall" TargetType="Button" BasedOn="{StaticResource PillWhite}">
+        <Setter Property="Padding" Value="12,5" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+    <Style x:Key="LinkButton" TargetType="Button" BasedOn="{StaticResource PillButton}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="6,3" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- == Nút icon tròn cố định (thao tác trên từng dòng) == -->
+    <Style x:Key="IconButton" TargetType="Button">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="Margin" Value="6,0,0,0" />
+        <Setter Property="Background" Value="{StaticResource BeigeBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" CornerRadius="18" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.8" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.65" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.35" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="IconButtonDark" TargetType="Button" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Background" Value="{StaticResource InkBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
+    </Style>
+    <Style x:Key="IconButtonDanger" TargetType="Button" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Background" Value="{StaticResource DangerSoftBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+    </Style>
+
+    <!-- Ô tích tròn 22px cho danh sách -->
+    <Style x:Key="CircleCheck" TargetType="CheckBox">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border x:Name="Box" Width="22" Height="22" CornerRadius="11" Background="Transparent"
+                            BorderBrush="{StaticResource InkBrush}" BorderThickness="1.5">
+                        <TextBlock x:Name="Tick" Style="{StaticResource Icon}" Text="&#xE73E;" FontSize="11"
+                                   Foreground="{StaticResource WhiteBrush}" Visibility="Collapsed" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource InkBrush}" />
+                            <Setter TargetName="Tick" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- == Sidebar: icon tròn + nhãn chữ bên dưới (Content = glyph, Tag = nhãn) == -->
+    <Style x:Key="NavItem" TargetType="ButtonBase">
+        <Setter Property="Width" Value="76" />
+        <Setter Property="Margin" Value="0,0,0,10" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <StackPanel Background="Transparent">
+                        <Border x:Name="Bd" Width="48" Height="48" CornerRadius="24" Background="{TemplateBinding Background}">
+                            <TextBlock x:Name="Glyph" Style="{StaticResource Icon}" Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FontSize="18"
+                                       Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                        <TextBlock Text="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" FontSize="12" FontWeight="SemiBold" Margin="0,5,0,0"
+                                   Foreground="{StaticResource InkBrush}" TextAlignment="Center" TextWrapping="Wrap" />
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.85" />
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource InkBrush}" />
+                            <Setter TargetName="Glyph" Property="Foreground" Value="{StaticResource WhiteBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- == Thẻ phần mềm: cả thẻ là một CheckBox (bấm bất kỳ đâu để chọn) == -->
+    <Style x:Key="AppCard" TargetType="CheckBox">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border x:Name="Bd" CornerRadius="18" Background="{TemplateBinding Background}" Padding="16,14"
+                            BorderBrush="Transparent" BorderThickness="2">
+                        <Grid>
+                            <ContentPresenter />
+                            <Border x:Name="Box" Width="22" Height="22" CornerRadius="6" HorizontalAlignment="Right" VerticalAlignment="Top"
+                                    Background="#99FFFFFF" BorderBrush="{StaticResource InkBrush}" BorderThickness="1.5">
+                                <TextBlock x:Name="Tick" Style="{StaticResource Icon}" Text="&#xE73E;" FontSize="12"
+                                           Foreground="{StaticResource WhiteBrush}" Visibility="Collapsed" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource InkBrush}" />
+                            <Setter TargetName="Tick" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.72" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="#33111111" />
+                            <Setter TargetName="Bd" Property="Opacity" Value="1" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource InkBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- == Sidebar: nút icon tròn == -->
+    <Style x:Key="NavButton" TargetType="RadioButton">
+        <Setter Property="GroupName" Value="Nav" />
+        <Setter Property="Width" Value="52" />
+        <Setter Property="Height" Value="52" />
+        <Setter Property="Margin" Value="0,0,0,14" />
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bd" CornerRadius="26" Background="{TemplateBinding Background}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.85" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Background" Value="{StaticResource InkBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- == Segmented pill (chế độ Add App) == -->
+    <Style x:Key="SegmentButton" TargetType="RadioButton">
+        <Setter Property="Background" Value="{StaticResource BeigeBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="Padding" Value="16,9" />
+        <Setter Property="Margin" Value="0,0,8,0" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bd" CornerRadius="20" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Background" Value="{StaticResource InkBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Ô màu Pastel tròn (chọn nhóm màu khi thêm app) -->
+    <Style x:Key="SwatchButton" TargetType="RadioButton">
+        <Setter Property="Width" Value="34" />
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Margin" Value="0,0,10,0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid>
+                        <Ellipse Fill="{TemplateBinding Background}" />
+                        <Ellipse x:Name="Ring" Stroke="{StaticResource InkBrush}" StrokeThickness="0" />
+                        <TextBlock x:Name="Check" Style="{StaticResource Icon}" Text="&#xE73E;" FontSize="13" Visibility="Collapsed" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Ring" Property="StrokeThickness" Value="2" />
+                            <Setter TargetName="Check" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- == Chip chọn app trên thẻ Pastel == -->
+    <Style x:Key="AppChip" TargetType="CheckBox">
+        <Setter Property="Margin" Value="0,0,8,8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Border x:Name="Bd" CornerRadius="16" Background="#80FFFFFF" BorderBrush="Transparent" BorderThickness="1.5" Padding="6,4,12,4">
+                        <StackPanel Orientation="Horizontal">
+                            <Border x:Name="Box" Width="18" Height="18" CornerRadius="9" Background="Transparent"
+                                    BorderBrush="{StaticResource InkBrush}" BorderThickness="1.5" Margin="0,0,8,0">
+                                <TextBlock x:Name="Tick" Style="{StaticResource Icon}" Text="&#xE73E;" FontSize="10"
+                                           Foreground="{StaticResource WhiteBrush}" Visibility="Collapsed" />
+                            </Border>
+                            <ContentPresenter VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource WhiteBrush}" />
+                            <Setter TargetName="Box" Property="Background" Value="{StaticResource InkBrush}" />
+                            <Setter TargetName="Tick" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="#40111111" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="RoundCheck" TargetType="CheckBox" BasedOn="{StaticResource AppChip}">
+        <Setter Property="Margin" Value="0" />
+    </Style>
+
+    <!-- == Thanh tiến trình Pastel == -->
+    <Style x:Key="PastelBar" TargetType="ProgressBar">
+        <Setter Property="Height" Value="10" />
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="100" />
+        <Setter Property="Background" Value="{StaticResource BeigeBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <Grid>
+                        <Border x:Name="PART_Track" CornerRadius="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag, FallbackValue=5}"
+                                Background="{TemplateBinding Background}" />
+                        <Border x:Name="PART_Indicator" HorizontalAlignment="Left"
+                                CornerRadius="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag, FallbackValue=5}"
+                                Background="{TemplateBinding Foreground}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- == Input == -->
+    <Style x:Key="Field" TargetType="TextBox">
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource InkBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource LineBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="FontSize" Value="13.5" />
+        <Setter Property="CaretBrush" Value="{StaticResource InkBrush}" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="Bd" CornerRadius="14" Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource InkBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.6" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FieldLabel" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+        <Setter Property="Margin" Value="2,12,0,6" />
+    </Style>
+
+    <!-- == Thẻ == -->
+    <Style x:Key="WhiteCard" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Padding" Value="18" />
+    </Style>
+    <Style x:Key="BeigePanel" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource BeigeBrush}" />
+        <Setter Property="CornerRadius" Value="24" />
+    </Style>
+    <Style x:Key="WhitePill" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Padding" Value="10,4" />
+    </Style>
+    <Style x:Key="TagPill" TargetType="Border">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="#59111111" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="14" />
+        <Setter Property="Padding" Value="10,4" />
+    </Style>
+
+    <!-- Icon app tròn: icon thật trong .\Icons\ hoặc chữ cái đầu -->
+    <DataTemplate x:Key="AppIconTemplate">
+        <Grid Width="34" Height="34" ToolTip="{Binding Name}">
+            <Ellipse Fill="{StaticResource WhiteBrush}" Stroke="{StaticResource LineBrush}" StrokeThickness="1" />
+            <TextBlock Text="{Binding Name, Converter={StaticResource Initial}}" FontWeight="Bold" FontSize="14"
+                       Foreground="{StaticResource InkBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Visibility="{Binding IconPath, Converter={StaticResource NullToVisibility}, ConverterParameter=invert}" />
+            <Image Source="{Binding IconPath, Converter={StaticResource PathToImage}}" Width="22" Height="22"
+                   RenderOptions.BitmapScalingMode="HighQuality" />
+        </Grid>
+    </DataTemplate>
+
+    <!-- Mặc định toàn app -->
+    <Style TargetType="ToolTip">
+        <Setter Property="Background" Value="{StaticResource InkBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource WhiteBrush}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="10,6" />
+    </Style>
+    <Style TargetType="ScrollViewer">
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+    </Style>
+</ResourceDictionary>

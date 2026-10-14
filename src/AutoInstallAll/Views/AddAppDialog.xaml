@@ -1,0 +1,209 @@
+<Window x:Class="AutoInstallAll.Views.AddAppDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AutoInstallAll.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:AddAppViewModel}"
+        Title="+ Add App" Width="760" SizeToContent="Height" MinHeight="420" MaxHeight="900"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
+        FontFamily="{StaticResource TextFont}" FontSize="13" Foreground="{StaticResource InkBrush}"
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+
+    <Border Background="{StaticResource CreamBrush}" CornerRadius="24" Margin="14" BorderBrush="{StaticResource LineBrush}" BorderThickness="1"
+            MouseLeftButtonDown="OnDragWindow">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="28" ShadowDepth="6" Opacity="0.18" Color="#000000" />
+        </Border.Effect>
+        <DockPanel Margin="28,24,28,24">
+
+            <!-- Header -->
+            <DockPanel DockPanel.Dock="Top">
+                <Button DockPanel.Dock="Right" Style="{StaticResource LinkButton}" VerticalAlignment="Top" Command="{Binding CancelCommand}" ToolTip="Đóng">
+                    <TextBlock Style="{StaticResource Icon}" Text="&#xE711;" FontSize="14" />
+                </Button>
+                <Border DockPanel.Dock="Left" Width="48" Height="48" CornerRadius="24" Background="{StaticResource MintBrush}" Margin="0,0,14,0">
+                    <TextBlock Style="{StaticResource Icon}" Text="&#xE710;" FontSize="18" />
+                </Border>
+                <StackPanel>
+                    <TextBlock Text="+ Add App" Style="{StaticResource H2}" FontSize="26" />
+                    <TextBlock Text="Thêm ứng dụng mới vào USB (.\Installers\ + manifest.json)" Style="{StaticResource Body}" />
+                </StackPanel>
+            </DockPanel>
+
+            <!-- Footer -->
+            <StackPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
+                <TextBlock Text="{Binding ErrorText}" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" Margin="0,0,0,8"
+                           Visibility="{Binding ErrorText, Converter={StaticResource NullToVisibility}}" />
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button Style="{StaticResource PillButton}" Margin="0,0,10,0" Command="{Binding CancelCommand}" Content="Cancel" />
+                        <Button Style="{StaticResource PillDark}" Command="{Binding SaveCommand}" IsDefault="False">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource Icon}" Text="&#xE896;" FontSize="14" Margin="0,0,8,0" />
+                                <TextBlock Text="Save &amp; Download Latest" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                        <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+                        <ProgressBar Style="{StaticResource PastelBar}" Height="6" Margin="0,6,0,0" Foreground="{StaticResource InkBrush}"
+                                     Value="{Binding Progress, Mode=OneWay}" IsIndeterminate="False"
+                                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
+                    </StackPanel>
+                </DockPanel>
+            </StackPanel>
+
+            <StackPanel>
+                <!-- Chọn chế độ -->
+                <WrapPanel Margin="0,22,0,10" IsEnabled="{Binding IsIdle}">
+                    <RadioButton Style="{StaticResource SegmentButton}" GroupName="Mode"
+                                 IsChecked="{Binding Mode, Converter={StaticResource EnumToBool}, ConverterParameter=Winget}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource Icon}" Text="&#xE721;" FontSize="13" Margin="0,0,8,0" />
+                            <TextBlock Text="Search Library / Winget" />
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource SegmentButton}" GroupName="Mode"
+                                 IsChecked="{Binding Mode, Converter={StaticResource EnumToBool}, ConverterParameter=DirectUrl}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource Icon}" Text="&#xE71B;" FontSize="13" Margin="0,0,8,0" />
+                            <TextBlock Text="Evergreen Direct Link" />
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource SegmentButton}" GroupName="Mode"
+                                 IsChecked="{Binding Mode, Converter={StaticResource EnumToBool}, ConverterParameter=LocalFile}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource Icon}" Text="&#xE8E5;" FontSize="13" Margin="0,0,8,0" />
+                            <TextBlock Text="Import Local .exe/.msi" />
+                        </StackPanel>
+                    </RadioButton>
+                </WrapPanel>
+                <TextBlock Text="{Binding ModeHint}" Style="{StaticResource Body}" Margin="2,0,0,12" />
+
+                <!-- Chế độ 1: Winget -->
+                <Border Style="{StaticResource BeigePanel}" CornerRadius="20" Padding="16"
+                        Visibility="{Binding Mode, Converter={StaticResource EnumToVisibility}, ConverterParameter=Winget}">
+                    <StackPanel>
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Style="{StaticResource PillDark}" Margin="10,0,0,0" Command="{Binding SearchCommand}" Content="Search" />
+                            <TextBox x:Name="SearchBox" Style="{StaticResource Field}" Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
+                                </TextBox.InputBindings>
+                            </TextBox>
+                        </DockPanel>
+                        <Border Background="{StaticResource WhiteBrush}" CornerRadius="14" Margin="0,10,0,0" Padding="4"
+                                Visibility="{Binding SearchResults.Count, Converter={StaticResource NullToVisibility}}">
+                            <ListBox ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult}" MaxHeight="150"
+                                     BorderThickness="0" Background="Transparent" IsEnabled="{Binding IsIdle}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Width="600" Margin="4,3">
+                                            <TextBlock DockPanel.Dock="Right" Text="{Binding Version}" Foreground="{StaticResource MutedBrush}" />
+                                            <TextBlock>
+                                                <Run Text="{Binding Name, Mode=OneWay}" FontWeight="SemiBold" />
+                                                <Run Text="{Binding Id, Mode=OneWay}" Foreground="{StaticResource MutedBrush}" FontSize="11.5" />
+                                            </TextBlock>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Chế độ 2: Direct URL -->
+                <Border Style="{StaticResource BeigePanel}" CornerRadius="20" Padding="16"
+                        Visibility="{Binding Mode, Converter={StaticResource EnumToVisibility}, ConverterParameter=DirectUrl}">
+                    <StackPanel>
+                        <TextBlock Text="Link tải (https://...)" Style="{StaticResource FieldLabel}" Margin="2,0,0,6" />
+                        <TextBox Style="{StaticResource Field}" Text="{Binding DirectUrl, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Tên ứng dụng (để trống để tự đặt theo tên file)" Style="{StaticResource FieldLabel}" />
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Style="{StaticResource PillDark}" Margin="10,0,0,0" Command="{Binding AnalyzeUrlCommand}" Content="Analyze" />
+                            <TextBox Style="{StaticResource Field}" Text="{Binding UrlAppName, UpdateSourceTrigger=PropertyChanged}" />
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Chế độ 3: Local file -->
+                <Border Style="{StaticResource BeigePanel}" CornerRadius="20" Padding="16"
+                        Visibility="{Binding Mode, Converter={StaticResource EnumToVisibility}, ConverterParameter=LocalFile}">
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Style="{StaticResource PillDark}" Margin="10,0,0,0" Command="{Binding BrowseCommand}" Content="Browse..." />
+                        <TextBox Style="{StaticResource Field}" IsReadOnly="True" Text="{Binding LocalPath, Mode=OneWay}" />
+                    </DockPanel>
+                </Border>
+
+                <!-- Bản nháp -->
+                <Border Style="{StaticResource WhiteCard}" Margin="0,14,0,0" Padding="20"
+                        Visibility="{Binding HasDraft, Converter={StaticResource BoolToVisibility}}">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="16" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Tên ứng dụng" Style="{StaticResource FieldLabel}" Margin="2,0,0,6" />
+                                <TextBox Style="{StaticResource Field}" Background="{StaticResource CreamBrush}" Text="{Binding DraftName, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Silent Switch" Style="{StaticResource FieldLabel}" Margin="2,0,0,6" />
+                                <TextBox Style="{StaticResource Field}" Background="{StaticResource CreamBrush}" FontFamily="Consolas"
+                                         Text="{Binding DraftSilentArgs, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Text="Nhóm thẻ Pastel" Style="{StaticResource FieldLabel}" />
+                        <StackPanel Orientation="Horizontal">
+                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{StaticResource PinkBrush}" ToolTip="Browser"
+                                         IsChecked="{Binding DraftColorGroup, Converter={StaticResource EnumToBool}, ConverterParameter=Pink}" />
+                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{StaticResource PeachBrush}" ToolTip="Typing &amp; Archive"
+                                         IsChecked="{Binding DraftColorGroup, Converter={StaticResource EnumToBool}, ConverterParameter=Peach}" />
+                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{StaticResource LavenderBrush}" ToolTip="Remote Support"
+                                         IsChecked="{Binding DraftColorGroup, Converter={StaticResource EnumToBool}, ConverterParameter=Lavender}" />
+                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{StaticResource MintBrush}" ToolTip="Messaging &amp; Custom"
+                                         IsChecked="{Binding DraftColorGroup, Converter={StaticResource EnumToBool}, ConverterParameter=Mint}" />
+                        </StackPanel>
+
+                        <Grid Margin="0,14,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Bộ đóng gói" Style="{StaticResource Caption}" Margin="0,2" />
+                            <TextBlock Grid.Column="1" Text="{Binding DraftPackager}" FontWeight="SemiBold" Margin="0,2" />
+                            <TextBlock Grid.Row="1" Text="Phiên bản" Style="{StaticResource Caption}" Margin="0,2" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DraftVersion}" FontWeight="SemiBold" Margin="0,2" />
+                            <TextBlock Grid.Row="2" Text="Nguồn" Style="{StaticResource Caption}" Margin="0,2" />
+                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding DraftSource}" TextTrimming="CharacterEllipsis" Margin="0,2" />
+                            <TextBlock Grid.Row="3" Text="Nhận diện" Style="{StaticResource Caption}" Margin="0,2" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding DraftEvidence}" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Margin="0,2" />
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding DraftWarnings}" Margin="0,10,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{StaticResource PeachBrush}" CornerRadius="12" Padding="12,7" Margin="0,0,0,6">
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="12" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</Window>
