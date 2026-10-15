@@ -28,6 +28,8 @@ public static class ServiceRegistration
         services.AddSingleton<SilentInstallService>();
         services.AddSingleton<AddApplicationService>();
         services.AddSingleton<SystemUtilitiesService>();
+        services.AddSingleton<AppUpdateService>();
+        services.AddSingleton<ThemeService>();
 
         // UI
         services.AddSingleton<IDialogService, DialogService>();

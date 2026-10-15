@@ -136,25 +136,44 @@ public sealed class StateToBrushConverter : IValueConverter
         Binding.DoNothing;
 }
 
-/// <summary>Bảng màu Concept 2 dùng trong code (đồng bộ với Themes/Theme.xaml).</summary>
+/// <summary>Bảng màu dùng trong code — đọc theo chủ đề Sáng/Tối hiện hành (Themes/Colors.*.xaml).</summary>
 public static class Palette
 {
-    public static readonly SolidColorBrush Cream = Make("#FAF7F5");
-    public static readonly SolidColorBrush Beige = Make("#EFEAE4");
-    public static readonly SolidColorBrush Ink = Make("#111111");
-    public static readonly SolidColorBrush Muted = Make("#4B5563");
-    public static readonly SolidColorBrush Pink = Make("#F4C5C7");
-    public static readonly SolidColorBrush Peach = Make("#FCE0C1");
-    public static readonly SolidColorBrush Lavender = Make("#D4D4FA");
-    public static readonly SolidColorBrush Mint = Make("#C3F0DC");
-    public static readonly SolidColorBrush Success = Make("#047857");
-    public static readonly SolidColorBrush Warning = Make("#B45309");
-    public static readonly SolidColorBrush Danger = Make("#B91C1C");
+    public static Brush Cream => Get("CreamBrush");
+    public static Brush Beige => Get("BeigeBrush");
+    public static Brush Ink => Get("InkBrush");
+    public static Brush Muted => Get("MutedBrush");
+    public static Brush Pink => Get("PinkBrush");
+    public static Brush Peach => Get("PeachBrush");
+    public static Brush Lavender => Get("LavenderBrush");
+    public static Brush Mint => Get("MintBrush");
+    public static Brush Success => Get("SuccessBrush");
+    public static Brush Warning => Get("WarningBrush");
+    public static Brush Danger => Get("DangerBrush");
 
-    private static SolidColorBrush Make(string hex)
+    private static Brush Get(string key) =>
+        Application.Current?.TryFindResource(key) as Brush ?? Brushes.Gray;
+}
+
+/// <summary>Trạng thái → chữ tiếng Việt cho trang Kho cài đặt.</summary>
+public sealed class StateToTextConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value switch
     {
-        var b = new SolidColorBrush((Color)ColorConverter.ConvertFromString(hex));
-        b.Freeze();
-        return b;
-    }
+        SoftwareState.Missing => "Chưa có trên USB",
+        SoftwareState.Ready => "Sẵn sàng",
+        SoftwareState.Latest => "Mới nhất",
+        SoftwareState.UpdateAvailable => "Có bản mới",
+        SoftwareState.Checking => "Đang kiểm tra",
+        SoftwareState.Downloading => "Đang tải",
+        SoftwareState.Verifying => "Đang xác minh",
+        SoftwareState.Queued => "Đang chờ",
+        SoftwareState.Installing => "Đang cài",
+        SoftwareState.Installed => "Đã cài",
+        SoftwareState.Failed => "Lỗi",
+        _ => value?.ToString() ?? ""
+    };
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) =>
+        Binding.DoNothing;
 }

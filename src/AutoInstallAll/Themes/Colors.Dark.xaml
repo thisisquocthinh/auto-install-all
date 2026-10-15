@@ -1,0 +1,33 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- Bảng màu Tối (dịu mắt) — cùng tên khoá ở cả hai file; mọi chỗ dùng phải là DynamicResource -->
+    <SolidColorBrush x:Key="CreamBrush" Color="#141417" />  <!-- Nền cửa sổ -->
+    <SolidColorBrush x:Key="BeigeBrush" Color="#1F1F24" />  <!-- Sidebar / cột phải / nút be -->
+    <SolidColorBrush x:Key="BeigeDeepBrush" Color="#2C2C33" />  <!-- Viền be đậm -->
+    <SolidColorBrush x:Key="LineBrush" Color="#33333B" />  <!-- Đường kẻ -->
+    <SolidColorBrush x:Key="InkBrush" Color="#F2F2F5" />  <!-- Chữ chính / nút đen -->
+    <SolidColorBrush x:Key="MutedBrush" Color="#A3A3AE" />  <!-- Chữ phụ -->
+    <SolidColorBrush x:Key="SubtleBrush" Color="#C4C4CC" />  <!-- Chữ mô tả trên thẻ -->
+    <SolidColorBrush x:Key="WhiteBrush" Color="#2A2A31" />  <!-- Bề mặt thẻ trắng / chữ trên nền Ink -->
+    <SolidColorBrush x:Key="PinkBrush" Color="#4B2B31" />
+    <SolidColorBrush x:Key="PeachBrush" Color="#4A3624" />
+    <SolidColorBrush x:Key="LavenderBrush" Color="#33345C" />
+    <SolidColorBrush x:Key="MintBrush" Color="#1E4536" />
+    <SolidColorBrush x:Key="PinkSoftBrush" Color="#3A272B" />
+    <SolidColorBrush x:Key="PinkStrongBrush" Color="#B85A65" />
+    <SolidColorBrush x:Key="CoralBrush" Color="#C9694F" />  <!-- Nút BẮT ĐẦU -->
+    <SolidColorBrush x:Key="CoralStrongBrush" Color="#A94F38" />  <!-- Tiến trình trên nút BẮT ĐẦU -->
+    <SolidColorBrush x:Key="OnCoralBrush" Color="#FFF7F3" />  <!-- Chữ trên nút BẮT ĐẦU -->
+    <SolidColorBrush x:Key="OnCoralSubtleBrush" Color="#FBE4DC" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="#34D399" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#FBBF24" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#F87171" />
+    <SolidColorBrush x:Key="DangerSoftBrush" Color="#4A2324" />
+    <SolidColorBrush x:Key="GlassBrush" Color="#33FFFFFF" />  <!-- Ô tích trên thẻ -->
+    <SolidColorBrush x:Key="TrackBrush" Color="#26FFFFFF" />  <!-- Rãnh thanh tiến trình trên thẻ -->
+    <SolidColorBrush x:Key="InkTrackBrush" Color="#33000000" />  <!-- Rãnh tiến trình trên nền Ink -->
+    <SolidColorBrush x:Key="HoverLineBrush" Color="#40FFFFFF" />  <!-- Viền khi rê chuột -->
+    <SolidColorBrush x:Key="HoverLineStrongBrush" Color="#59FFFFFF" />
+    <SolidColorBrush x:Key="TagLineBrush" Color="#59FFFFFF" />
+    <SolidColorBrush x:Key="ShadowColorBrush" Color="#000000" />
+</ResourceDictionary>

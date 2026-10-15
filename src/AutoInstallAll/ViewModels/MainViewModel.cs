@@ -31,6 +31,8 @@ public sealed partial class MainViewModel : ObservableObject
     private readonly AutoUpdaterService _updater;
     private readonly SilentInstallService _installer;
     private readonly SystemUtilitiesService _system;
+    private readonly AppUpdateService _appUpdate;
+    private readonly ThemeService _theme;
     private readonly IDialogService _dialogs;
     private readonly Dispatcher _ui;
 
@@ -46,6 +48,8 @@ public sealed partial class MainViewModel : ObservableObject
         AutoUpdaterService updater,
         SilentInstallService installer,
         SystemUtilitiesService system,
+        AppUpdateService appUpdate,
+        ThemeService theme,
         IDialogService dialogs)
     {
         _paths = paths;
@@ -54,6 +58,8 @@ public sealed partial class MainViewModel : ObservableObject
         _updater = updater;
         _installer = installer;
         _system = system;
+        _appUpdate = appUpdate;
+        _theme = theme;
         _dialogs = dialogs;
         _ui = Application.Current.Dispatcher;
 
@@ -344,6 +350,11 @@ public sealed partial class MainViewModel : ObservableObject
         if (IsBusy) return;
 
         var selected = Apps.Where(a => a.IsSelected).ToList();
+        if (selected.Count == 0 && ApplyTweaksWithSetup)
+        {
+            await ApplyDesktopTweaksAsync();
+            return;
+        }
         if (selected.Count == 0)
         {
             _dialogs.Info("Bắt đầu cài đặt", "Hãy tích chọn ít nhất một phần mềm (bấm vào thẻ để chọn).");
@@ -353,6 +364,8 @@ public sealed partial class MainViewModel : ObservableObject
         var message = $"Cài đặt tự động {selected.Count} phần mềm:\n\n{string.Join("\n", selected.Select(a => "• " + a.Name))}";
         if (missing.Count > 0)
             message += $"\n\nChưa có trên USB (sẽ tải nếu có mạng): {string.Join(", ", missing)}";
+        if (ApplyTweaksWithSetup)
+            message += "\n\nSau khi cài xong: chuẩn hóa Desktop & Menu (màn hình sẽ nháy nhẹ khi Explorer khởi động lại).";
         if (!_dialogs.Confirm("Bắt đầu cài đặt", message))
             return;
 
@@ -373,12 +386,20 @@ public sealed partial class MainViewModel : ObservableObject
             });
             var results = await _installer.InstallQueueAsync(selected, progress, _queueCts.Token);
 
+            string tweakSummary = "";
+            if (ApplyTweaksWithSetup)
+            {
+                QueueStatus = "Đang chuẩn hóa Desktop & Menu...";
+                var tweaks = await _system.ApplyDesktopTweaksAsync(null, _queueCts.Token);
+                tweakSummary = $"\n\n✨ Chuẩn hóa Desktop & Menu: {tweaks.Count(t => t.Success)}/{tweaks.Count} mục";
+            }
+
             var ok = results.Count(r => r.Success);
             QueuePercent = 100;
             QueueTitle = $"ĐÃ XONG — {ok}/{results.Count} phần mềm";
             QueueStatus = results.Any(r => r.RebootRequired) ? "Cần khởi động lại máy để hoàn tất" : "Bấm để cài lại";
             _dialogs.Info("Kết quả cài đặt", string.Join(Environment.NewLine,
-                results.Select(r => $"{(r.Success ? "✓" : "✗")} {r.Item.Name}: {r.Message}")));
+                results.Select(r => $"{(r.Success ? "✓" : "✗")} {r.Item.Name}: {r.Message}")) + tweakSummary);
         }
         catch (OperationCanceledException)
         {
@@ -426,6 +447,26 @@ public sealed partial class MainViewModel : ObservableObject
                 _dialogs.Info(item.Name, r.RebootRequired ? $"{r.Message}\nHãy khởi động lại máy." : r.Message);
             else
                 _dialogs.Error(item.Name, r.Message);
+        });
+
+    // =====================================================================
+    // Chuẩn hóa Desktop & Menu (SystemUtilitiesService)
+    // =====================================================================
+
+    /// <summary>Tích chọn = tự chạy chuẩn hóa Desktop & Menu sau khi hàng đợi cài đặt xong.</summary>
+    [ObservableProperty] private bool _applyTweaksWithSetup = true;
+
+    [RelayCommand(CanExecute = nameof(CanRunOperation))]
+    private Task ApplyDesktopTweaksAsync() =>
+        RunOperationAsync("Đang chuẩn hóa Desktop & Menu", async ct =>
+        {
+            var progress = new Progress<string>(m => BusyMessage = m);
+            var results = await _system.ApplyDesktopTweaksAsync(progress, ct);
+            var text = string.Join(Environment.NewLine, results.Select(r => $"{(r.Success ? "✓" : "✗")} {r.Name}: {r.Message}"));
+            if (results.All(r => r.Success))
+                _dialogs.Info("Chuẩn hóa Desktop & Menu", text);
+            else
+                _dialogs.Error("Chuẩn hóa Desktop & Menu", text);
         });
 
     // =====================================================================
@@ -703,15 +744,31 @@ public sealed partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void ClearLog() => LogLines.Clear();
 
+    private readonly System.Collections.Concurrent.ConcurrentQueue<string> _pendingLog = new();
+    private int _logFlushScheduled;
+
+    /// <summary>
+    /// Dòng log có thể đến từ bất kỳ luồng nào và rất dày khi đang cài — gom lại, đẩy lên giao diện một lần
+    /// ở mức ưu tiên Background (không chen vào layout, không tái nhập khi đang hiện hộp thoại).
+    /// </summary>
     private void OnLogEntry(object? sender, LogEntry e)
     {
-        var line = $"{e.Time:HH:mm:ss}  [{e.Category}] {(e.Level == LogLevel.Info ? "" : e.Level.ToString().ToUpperInvariant() + ": ")}{e.Message}";
-        _ui.BeginInvoke(() =>
-        {
-            LogLines.Add(line);
-            while (LogLines.Count > MaxLogLines) LogLines.RemoveAt(0);
-        });
+        _pendingLog.Enqueue($"{e.Time:HH:mm:ss}  [{e.Category}] {(e.Level == LogLevel.Info ? "" : e.Level.ToString().ToUpperInvariant() + ": ")}{e.Message}");
+        if (Interlocked.Exchange(ref _logFlushScheduled, 1) == 0)
+            _ui.BeginInvoke(DispatcherPriority.Background, FlushLog);
     }
+
+    private void FlushLog()
+    {
+        Interlocked.Exchange(ref _logFlushScheduled, 0);
+        while (_pendingLog.TryDequeue(out var line))
+            LogLines.Add(line);
+        while (LogLines.Count > MaxLogLines) LogLines.RemoveAt(0);
+        LogFlushed?.Invoke(this, EventArgs.Empty);
+    }
+
+    /// <summary>Báo View cuộn Nhật ký xuống dòng cuối (sau khi đã thêm xong cả đợt).</summary>
+    public event EventHandler? LogFlushed;
 
     // =====================================================================
     // Settings
@@ -725,9 +782,14 @@ public sealed partial class MainViewModel : ObservableObject
     [ObservableProperty] private string _settingDataLetter = "D";
     [ObservableProperty] private string _settingDataLabel = "DATA";
 
+    private bool _loadingSettings;
+
     private void LoadSettingsFromManifest()
     {
         var s = _manifest.Settings;
+        _loadingSettings = true;
+        ThemeMode = s.UiTheme;
+        _loadingSettings = false;
         SettingTimeoutMinutes = s.InstallTimeoutMinutes;
         SettingVerifySha256 = s.VerifySha256;
         SettingDeleteOldInstaller = s.DeleteOldInstallerAfterUpdate;
@@ -769,6 +831,103 @@ public sealed partial class MainViewModel : ObservableObject
             _dialogs.Info("Cài đặt", "Đã lưu cài đặt vào manifest.json.");
         });
     }
+
+    // =====================================================================
+    // Giao diện Sáng / Tối
+    // =====================================================================
+
+    [ObservableProperty] private UiThemeMode _themeMode = UiThemeMode.Light;
+
+    partial void OnThemeModeChanged(UiThemeMode value)
+    {
+        if (_loadingSettings) return;
+        _theme.Apply(value);
+        _manifest.Settings.UiTheme = value;
+        _ = SaveManifestQuietlyAsync();
+    }
+
+    /// <summary>Gọi từ View sau khi bảng màu đổi: dựng lại các thanh màu dùng Brush tính trong code.</summary>
+    public void OnThemeChanged() => UpdateSplitPlan();
+
+    private async Task SaveManifestQuietlyAsync()
+    {
+        try
+        {
+            await _manifest.SaveAsync(_paths.ManifestPath, CancellationToken.None);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            _log.Warn("app", "Không lưu được lựa chọn giao diện vào manifest.json", ex);
+        }
+    }
+
+    // =====================================================================
+    // Kiểm tra cập nhật Auto Install All (GitHub Releases)
+    // =====================================================================
+
+    public string AppVersionText => $"Phiên bản đang dùng: v{AppUpdateService.CurrentVersion.ToString(3)}";
+
+    [ObservableProperty] private string _appUpdateStatus = "Bấm để kiểm tra bản mới trên GitHub.";
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasAppUpdate))]
+    private AppUpdateInfo? _availableAppUpdate;
+
+    public bool HasAppUpdate => AvailableAppUpdate is { IsNewer: true };
+
+    [RelayCommand(CanExecute = nameof(CanRunOperation))]
+    private Task CheckAppUpdateAsync() =>
+        RunOperationAsync("Đang kiểm tra cập nhật", async ct =>
+        {
+            AppUpdateInfo info;
+            try
+            {
+                info = await _appUpdate.CheckAsync(ct);
+            }
+            catch (Exception ex) when (ex is System.Net.Http.HttpRequestException or TimeoutException or System.Text.Json.JsonException or InvalidDataException)
+            {
+                AppUpdateStatus = "Không kiểm tra được — hãy kết nối mạng rồi thử lại.";
+                _log.Warn("selfupdate", "Kiểm tra cập nhật thất bại", ex);
+                _dialogs.Error("Kiểm tra cập nhật", $"Không kết nối được tới GitHub.\n\n{ex.Message}");
+                return;
+            }
+
+            AvailableAppUpdate = info.IsNewer ? info : null;
+            if (!info.IsNewer)
+            {
+                AppUpdateStatus = $"Bạn đang dùng bản mới nhất (v{info.CurrentVersion.ToString(3)}).";
+                _dialogs.Info("Kiểm tra cập nhật", AppUpdateStatus);
+                return;
+            }
+
+            AppUpdateStatus = $"Có bản mới {info.TagName} (đang dùng v{info.CurrentVersion.ToString(3)}).";
+            var notes = string.IsNullOrWhiteSpace(info.Notes) ? "" : "\n\n" + Shorten(info.Notes, 900);
+            if (_dialogs.Confirm("Có bản cập nhật mới",
+                    $"Đã có Auto Install All {info.TagName}.{notes}\n\nTải về và cập nhật ngay? Ứng dụng sẽ tự đóng rồi mở lại " +
+                    "(manifest.json và các bộ cài trong .\\Installers\\ được giữ nguyên)."))
+                await DownloadAndApplyUpdateAsync(info, ct);
+        });
+
+    [RelayCommand(CanExecute = nameof(CanRunOperation))]
+    private Task InstallAppUpdateAsync() =>
+        AvailableAppUpdate is not { } info
+            ? Task.CompletedTask
+            : RunOperationAsync($"Đang cập nhật lên {info.TagName}", ct => DownloadAndApplyUpdateAsync(info, ct));
+
+    [RelayCommand]
+    private void OpenReleasesPage() => _dialogs.OpenFolder(AvailableAppUpdate?.ReleaseUrl ?? AppUpdateService.ReleasesPage);
+
+    private async Task DownloadAndApplyUpdateAsync(AppUpdateInfo info, CancellationToken ct)
+    {
+        var progress = new Progress<double>(v => { BusyProgress = v; BusyMessage = $"Đang tải {info.TagName} {v:0}%"; });
+        var script = await _appUpdate.PrepareAsync(info, progress, ct);
+        _dialogs.Info("Cập nhật", $"Đã tải và kiểm tra xong {info.TagName}. Bấm OK để đóng ứng dụng và cập nhật — ứng dụng sẽ tự mở lại.");
+        _appUpdate.LaunchUpdater(script);
+        Application.Current.Shutdown();
+    }
+
+    private static string Shorten(string text, int max) =>
+        text.Length <= max ? text.Trim() : text[..max].TrimEnd() + "…";
 
     // =====================================================================
     // Hạ tầng thao tác
@@ -822,10 +981,13 @@ public sealed partial class MainViewModel : ObservableObject
         InstallItemCommand.NotifyCanExecuteChanged();
         InstallVcRedistCommand.NotifyCanExecuteChanged();
         InstallDirectXCommand.NotifyCanExecuteChanged();
+        ApplyDesktopTweaksCommand.NotifyCanExecuteChanged();
         RefreshSystemCommand.NotifyCanExecuteChanged();
         QuickSplitCommand.NotifyCanExecuteChanged();
         RemoveBloatwareCommand.NotifyCanExecuteChanged();
         RescanUsbCommand.NotifyCanExecuteChanged();
         SaveSettingsCommand.NotifyCanExecuteChanged();
+        CheckAppUpdateCommand.NotifyCanExecuteChanged();
+        InstallAppUpdateCommand.NotifyCanExecuteChanged();
     }
 }

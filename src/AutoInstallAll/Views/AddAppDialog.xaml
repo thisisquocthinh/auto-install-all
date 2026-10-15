@@ -9,10 +9,10 @@
         Title="+ Add App" Width="760" SizeToContent="Height" MinHeight="420" MaxHeight="900"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner" ShowInTaskbar="False"
-        FontFamily="{StaticResource TextFont}" FontSize="13" Foreground="{StaticResource InkBrush}"
+        FontFamily="{StaticResource TextFont}" FontSize="13" Foreground="{DynamicResource InkBrush}"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
 
-    <Border Background="{StaticResource CreamBrush}" CornerRadius="24" Margin="14" BorderBrush="{StaticResource LineBrush}" BorderThickness="1"
+    <Border Background="{DynamicResource CreamBrush}" CornerRadius="24" Margin="14" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
             MouseLeftButtonDown="OnDragWindow">
         <Border.Effect>
             <DropShadowEffect BlurRadius="28" ShadowDepth="6" Opacity="0.18" Color="#000000" />
@@ -24,7 +24,7 @@
                 <Button DockPanel.Dock="Right" Style="{StaticResource LinkButton}" VerticalAlignment="Top" Command="{Binding CancelCommand}" ToolTip="Đóng">
                     <TextBlock Style="{StaticResource Icon}" Text="&#xE711;" FontSize="14" />
                 </Button>
-                <Border DockPanel.Dock="Left" Width="48" Height="48" CornerRadius="24" Background="{StaticResource MintBrush}" Margin="0,0,14,0">
+                <Border DockPanel.Dock="Left" Width="48" Height="48" CornerRadius="24" Background="{DynamicResource MintBrush}" Margin="0,0,14,0">
                     <TextBlock Style="{StaticResource Icon}" Text="&#xE710;" FontSize="18" />
                 </Border>
                 <StackPanel>
@@ -35,7 +35,7 @@
 
             <!-- Footer -->
             <StackPanel DockPanel.Dock="Bottom" Margin="0,16,0,0">
-                <TextBlock Text="{Binding ErrorText}" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" Margin="0,0,0,8"
+                <TextBlock Text="{Binding ErrorText}" Foreground="{DynamicResource DangerBrush}" TextWrapping="Wrap" Margin="0,0,0,8"
                            Visibility="{Binding ErrorText, Converter={StaticResource NullToVisibility}}" />
                 <DockPanel>
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
@@ -49,7 +49,7 @@
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
                         <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
-                        <ProgressBar Style="{StaticResource PastelBar}" Height="6" Margin="0,6,0,0" Foreground="{StaticResource InkBrush}"
+                        <ProgressBar Style="{StaticResource PastelBar}" Height="6" Margin="0,6,0,0" Foreground="{DynamicResource InkBrush}"
                                      Value="{Binding Progress, Mode=OneWay}" IsIndeterminate="False"
                                      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
                     </StackPanel>
@@ -95,17 +95,17 @@
                                 </TextBox.InputBindings>
                             </TextBox>
                         </DockPanel>
-                        <Border Background="{StaticResource WhiteBrush}" CornerRadius="14" Margin="0,10,0,0" Padding="4"
+                        <Border Background="{DynamicResource WhiteBrush}" CornerRadius="14" Margin="0,10,0,0" Padding="4"
                                 Visibility="{Binding SearchResults.Count, Converter={StaticResource NullToVisibility}}">
                             <ListBox ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedResult}" MaxHeight="150"
                                      BorderThickness="0" Background="Transparent" IsEnabled="{Binding IsIdle}">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <DockPanel Width="600" Margin="4,3">
-                                            <TextBlock DockPanel.Dock="Right" Text="{Binding Version}" Foreground="{StaticResource MutedBrush}" />
+                                            <TextBlock DockPanel.Dock="Right" Text="{Binding Version}" Foreground="{DynamicResource MutedBrush}" />
                                             <TextBlock>
                                                 <Run Text="{Binding Name, Mode=OneWay}" FontWeight="SemiBold" />
-                                                <Run Text="{Binding Id, Mode=OneWay}" Foreground="{StaticResource MutedBrush}" FontSize="11.5" />
+                                                <Run Text="{Binding Id, Mode=OneWay}" Foreground="{DynamicResource MutedBrush}" FontSize="11.5" />
                                             </TextBlock>
                                         </DockPanel>
                                     </DataTemplate>
@@ -150,24 +150,24 @@
                             </Grid.ColumnDefinitions>
                             <StackPanel>
                                 <TextBlock Text="Tên ứng dụng" Style="{StaticResource FieldLabel}" Margin="2,0,0,6" />
-                                <TextBox Style="{StaticResource Field}" Background="{StaticResource CreamBrush}" Text="{Binding DraftName, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Style="{StaticResource Field}" Background="{DynamicResource CreamBrush}" Text="{Binding DraftName, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                             <StackPanel Grid.Column="2">
                                 <TextBlock Text="Silent Switch" Style="{StaticResource FieldLabel}" Margin="2,0,0,6" />
-                                <TextBox Style="{StaticResource Field}" Background="{StaticResource CreamBrush}" FontFamily="Consolas"
+                                <TextBox Style="{StaticResource Field}" Background="{DynamicResource CreamBrush}" FontFamily="Consolas"
                                          Text="{Binding DraftSilentArgs, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </Grid>
 
                         <TextBlock Text="Nhóm thẻ Pastel" Style="{StaticResource FieldLabel}" />
                         <StackPanel Orientation="Horizontal">
-                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{StaticResource PinkBrush}" ToolTip="Browser"
+                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{DynamicResource PinkBrush}" ToolTip="Browser"
                                          IsChecked="{Binding DraftColorGroup, Converter={StaticResource EnumToBool}, ConverterParameter=Pink}" />
-                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{StaticResource PeachBrush}" ToolTip="Typing &amp; Archive"
+                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{DynamicResource PeachBrush}" ToolTip="Typing &amp; Archive"
                                          IsChecked="{Binding DraftColorGroup, Converter={StaticResource EnumToBool}, ConverterParameter=Peach}" />
-                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{StaticResource LavenderBrush}" ToolTip="Remote Support"
+                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{DynamicResource LavenderBrush}" ToolTip="Remote Support"
                                          IsChecked="{Binding DraftColorGroup, Converter={StaticResource EnumToBool}, ConverterParameter=Lavender}" />
-                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{StaticResource MintBrush}" ToolTip="Messaging &amp; Custom"
+                            <RadioButton Style="{StaticResource SwatchButton}" GroupName="Color" Background="{DynamicResource MintBrush}" ToolTip="Messaging &amp; Custom"
                                          IsChecked="{Binding DraftColorGroup, Converter={StaticResource EnumToBool}, ConverterParameter=Mint}" />
                         </StackPanel>
 
@@ -189,13 +189,13 @@
                             <TextBlock Grid.Row="2" Text="Nguồn" Style="{StaticResource Caption}" Margin="0,2" />
                             <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding DraftSource}" TextTrimming="CharacterEllipsis" Margin="0,2" />
                             <TextBlock Grid.Row="3" Text="Nhận diện" Style="{StaticResource Caption}" Margin="0,2" />
-                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding DraftEvidence}" TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" Margin="0,2" />
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding DraftEvidence}" TextWrapping="Wrap" Foreground="{DynamicResource MutedBrush}" Margin="0,2" />
                         </Grid>
 
                         <ItemsControl ItemsSource="{Binding DraftWarnings}" Margin="0,10,0,0">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="{StaticResource PeachBrush}" CornerRadius="12" Padding="12,7" Margin="0,0,0,6">
+                                    <Border Background="{DynamicResource PeachBrush}" CornerRadius="12" Padding="12,7" Margin="0,0,0,6">
                                         <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="12" />
                                     </Border>
                                 </DataTemplate>

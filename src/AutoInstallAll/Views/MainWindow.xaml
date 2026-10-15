@@ -9,9 +9,9 @@
         Title="Thiết lập máy tính mới — Auto Install All"
         Width="1480" Height="940" MinWidth="1280" MinHeight="820"
         WindowStartupLocation="CenterScreen"
-        Background="{StaticResource CreamBrush}"
+        Background="{DynamicResource CreamBrush}"
         FontFamily="{StaticResource TextFont}" FontSize="13"
-        Foreground="{StaticResource InkBrush}"
+        Foreground="{DynamicResource InkBrush}"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
 
     <Window.Resources>
@@ -34,19 +34,19 @@
 
                     <!-- Hàng giữa: tên + công dụng -->
                     <StackPanel Grid.Row="1" Margin="0,12,0,10">
-                        <TextBlock Text="{Binding Item.Name}" FontSize="17" FontWeight="Bold" Foreground="{StaticResource InkBrush}"
+                        <TextBlock Text="{Binding Item.Name}" FontSize="17" FontWeight="Bold" Foreground="{DynamicResource InkBrush}"
                                    TextWrapping="Wrap" MaxHeight="46" TextTrimming="CharacterEllipsis" LineHeight="21" />
-                        <TextBlock Text="{Binding Description}" FontSize="13" Foreground="#374151" Margin="0,3,0,0"
+                        <TextBlock Text="{Binding Description}" FontSize="13" Foreground="{DynamicResource SubtleBrush}" Margin="0,3,0,0"
                                    TextWrapping="Wrap" MaxHeight="36" TextTrimming="CharacterEllipsis" />
                     </StackPanel>
 
                     <!-- Hàng đáy: nhãn trạng thái / tiến trình -->
                     <StackPanel Grid.Row="2">
-                        <Border Background="{StaticResource WhiteBrush}" CornerRadius="13" Padding="10,5" HorizontalAlignment="Left">
+                        <Border Background="{DynamicResource WhiteBrush}" CornerRadius="13" Padding="10,5" HorizontalAlignment="Left">
                             <TextBlock Text="{Binding StatusText}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                         </Border>
                         <ProgressBar Style="{StaticResource PastelBar}" Height="6" Margin="0,8,0,0"
-                                     Background="#80FFFFFF" Foreground="{StaticResource InkBrush}" Value="{Binding Progress, Mode=OneWay}"
+                                     Background="{DynamicResource TrackBrush}" Foreground="{DynamicResource InkBrush}" Value="{Binding Progress, Mode=OneWay}"
                                      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
                     </StackPanel>
                 </Grid>
@@ -56,12 +56,12 @@
         <!-- Độ rộng cột dùng chung cho tiêu đề và từng dòng ở trang Apps -->
         <GridLength x:Key="ColCheck">40</GridLength>
         <GridLength x:Key="ColIcon">56</GridLength>
-        <GridLength x:Key="ColSilent">230</GridLength>
-        <GridLength x:Key="ColVersion">170</GridLength>
+        <GridLength x:Key="ColSilent">0.9*</GridLength>
+        <GridLength x:Key="ColVersion">140</GridLength>
         <GridLength x:Key="ColActions">132</GridLength>
 
         <DataTemplate x:Key="AppRowTemplate">
-            <Border Background="{StaticResource WhiteBrush}" CornerRadius="18" Padding="16,12" Margin="0,0,0,8"
+            <Border Background="{DynamicResource WhiteBrush}" CornerRadius="18" Padding="16,12" Margin="0,0,0,8"
                     ToolTip="{Binding StatusMessage}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -89,9 +89,9 @@
                         <TextBlock Text="{Binding Name}" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                         <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                             <Ellipse Width="7" Height="7" Fill="{Binding State, Converter={StaticResource StateToBrush}}" VerticalAlignment="Center" Margin="0,0,6,0" />
-                            <TextBlock Text="{Binding State}" FontSize="12" FontWeight="SemiBold"
+                            <TextBlock Text="{Binding State, Converter={StaticResource StateToText}}" FontSize="12" FontWeight="SemiBold"
                                        Foreground="{Binding State, Converter={StaticResource StateToBrush}}" />
-                            <TextBlock FontSize="12" Foreground="{StaticResource MutedBrush}" Margin="8,0,0,0" TextTrimming="CharacterEllipsis">
+                            <TextBlock FontSize="12" Foreground="{DynamicResource MutedBrush}" Margin="8,0,0,0" TextTrimming="CharacterEllipsis">
                                 <Run Text="{Binding PackagerType, Mode=OneWay}" />
                                 <Run Text="·" />
                                 <Run Text="{Binding Source.Mode, Mode=OneWay}" />
@@ -100,12 +100,12 @@
                     </StackPanel>
 
                     <TextBox Grid.Column="3" Style="{StaticResource Field}" Height="36" Padding="10,0" Margin="0,0,16,0"
-                             Background="{StaticResource CreamBrush}" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center"
+                             Background="{DynamicResource CreamBrush}" FontFamily="Consolas" FontSize="12" VerticalAlignment="Center"
                              ToolTip="Tham số cài ngầm — sửa rồi bấm Lưu thay đổi"
                              Text="{Binding SilentArgs, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
 
-                    <Border Grid.Column="4" Background="{StaticResource BeigeBrush}" CornerRadius="14" Padding="12,6"
-                            HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="160">
+                    <Border Grid.Column="4" Background="{DynamicResource BeigeBrush}" CornerRadius="14" Padding="12,6"
+                            HorizontalAlignment="Left" VerticalAlignment="Center" MaxWidth="140">
                         <TextBlock Text="{Binding VersionLabel}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                     </Border>
 
@@ -125,7 +125,7 @@
                     </StackPanel>
 
                     <ProgressBar Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource PastelBar}" Height="6" Margin="0,10,0,0"
-                                 Background="{StaticResource BeigeBrush}" Foreground="{StaticResource InkBrush}" Value="{Binding Progress, Mode=OneWay}"
+                                 Background="{DynamicResource BeigeBrush}" Foreground="{DynamicResource InkBrush}" Value="{Binding Progress, Mode=OneWay}"
                                  Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
                 </Grid>
             </Border>
@@ -199,9 +199,9 @@
             <DockPanel Visibility="{Binding CurrentPage, Converter={StaticResource EnumToVisibility}, ConverterParameter=Home}">
                 <StackPanel DockPanel.Dock="Top" Margin="7,6,0,0">
                     <TextBlock Text="Thiết lập máy tính mới" FontFamily="{StaticResource DisplayFont}" FontSize="35" FontWeight="Bold"
-                               Foreground="{StaticResource InkBrush}" />
+                               Foreground="{DynamicResource InkBrush}" />
                     <TextBlock Text="Chọn phần mềm cần dùng và bấm Bắt đầu để tự động cài đặt từ USB" FontSize="16"
-                               Foreground="{StaticResource MutedBrush}" Margin="0,4,0,0" TextWrapping="Wrap" />
+                               Foreground="{DynamicResource MutedBrush}" Margin="0,4,0,0" TextWrapping="Wrap" />
 
                     <!-- Thanh nút thao tác nhanh -->
                     <WrapPanel Margin="0,18,0,4">
@@ -297,7 +297,7 @@
                                         </Button>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                        <Border Width="46" Height="46" CornerRadius="23" Background="{StaticResource LavenderBrush}" Margin="0,0,14,0">
+                                        <Border Width="46" Height="46" CornerRadius="23" Background="{DynamicResource LavenderBrush}" Margin="0,0,14,0">
                                             <TextBlock Style="{StaticResource Icon}" Text="{Binding BitLockerGlyph}" FontSize="18" />
                                         </Border>
                                         <StackPanel VerticalAlignment="Center">
@@ -324,7 +324,7 @@
                                         <TextBlock Text="{Binding BitLocker.EncryptionMethod, FallbackValue=—, TargetNullValue=—}" FontWeight="SemiBold" />
                                     </StackPanel>
                                 </UniformGrid>
-                                <ProgressBar Style="{StaticResource PastelBar}" Margin="0,16,0,0" Foreground="{StaticResource LavenderBrush}"
+                                <ProgressBar Style="{StaticResource PastelBar}" Margin="0,16,0,0" Foreground="{DynamicResource LavenderBrush}"
                                              Value="{Binding BitLocker.DecryptionProgress, Mode=OneWay, FallbackValue=0}"
                                              Visibility="{Binding IsBitLockerBusy, Converter={StaticResource BoolToVisibility}}" />
                             </StackPanel>
@@ -338,7 +338,7 @@
                                 <ItemsControl ItemsSource="{Binding Partitions}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1" Padding="0,8">
+                                            <Border BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1" Padding="0,8">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="44" />
@@ -348,12 +348,12 @@
                                                         <ColumnDefinition Width="130" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="{Binding PartitionNumber, StringFormat=#{0}}" Foreground="{StaticResource MutedBrush}" />
+                                                    <TextBlock Text="{Binding PartitionNumber, StringFormat=#{0}}" Foreground="{DynamicResource MutedBrush}" />
                                                     <TextBlock Grid.Column="1" Text="{Binding DriveLetter, StringFormat={}{0}:, TargetNullValue=—}" FontWeight="Bold" />
                                                     <TextBlock Grid.Column="2" Text="{Binding PartitionType}" />
                                                     <TextBlock Grid.Column="3" Text="{Binding SizeGB, StringFormat={}{0} GB}" FontWeight="SemiBold" />
-                                                    <TextBlock Grid.Column="4" Text="{Binding UsedGB, StringFormat=đã dùng {0} GB}" Foreground="{StaticResource MutedBrush}" />
-                                                    <TextBlock Grid.Column="5" Foreground="{StaticResource MutedBrush}">
+                                                    <TextBlock Grid.Column="4" Text="{Binding UsedGB, StringFormat=đã dùng {0} GB}" Foreground="{DynamicResource MutedBrush}" />
+                                                    <TextBlock Grid.Column="5" Foreground="{DynamicResource MutedBrush}">
                                                         <Run Text="{Binding FileSystem, Mode=OneWay}" />
                                                         <Run Text="{Binding Label, Mode=OneWay}" />
                                                     </TextBlock>
@@ -393,14 +393,14 @@
                                             <CheckBox Style="{StaticResource AppChip}" IsChecked="{Binding IsSelected, Mode=TwoWay}" ToolTip="{Binding PackageName}">
                                                 <TextBlock FontSize="12.5">
                                                     <Run Text="{Binding DisplayName, Mode=OneWay}" FontWeight="SemiBold" />
-                                                    <Run Text="{Binding Status, Mode=OneWay}" Foreground="{StaticResource MutedBrush}" FontSize="11" />
+                                                    <Run Text="{Binding Status, Mode=OneWay}" Foreground="{DynamicResource MutedBrush}" FontSize="11" />
                                                 </TextBlock>
                                             </CheckBox>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                     <ItemsControl.Template>
                                         <ControlTemplate TargetType="ItemsControl">
-                                            <Border Background="{StaticResource BeigeBrush}" CornerRadius="16" Padding="12,12,4,4">
+                                            <Border Background="{DynamicResource BeigeBrush}" CornerRadius="16" Padding="12,12,4,4">
                                                 <ItemsPresenter />
                                             </Border>
                                         </ControlTemplate>
@@ -433,21 +433,21 @@
                                 <TextBlock Text="AutoInstallAll.exe" Style="{StaticResource Caption}" />
                             </StackPanel>
                         </Button>
-                        <Button Style="{StaticResource PillWhite}" Margin="0,0,12,0" Command="{Binding OpenFolderCommand}" CommandParameter="installers" HorizontalContentAlignment="Left" Padding="18,14" Background="{StaticResource MintBrush}">
+                        <Button Style="{StaticResource PillWhite}" Margin="0,0,12,0" Command="{Binding OpenFolderCommand}" CommandParameter="installers" HorizontalContentAlignment="Left" Padding="18,14" Background="{DynamicResource MintBrush}">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource Icon}" Text="&#xE88E;" FontSize="20" HorizontalAlignment="Left" />
                                 <TextBlock Text=".\Installers\" FontWeight="SemiBold" Margin="0,8,0,0" />
                                 <TextBlock Text="{Binding UsbSummary}" Style="{StaticResource Caption}" />
                             </StackPanel>
                         </Button>
-                        <Button Style="{StaticResource PillWhite}" Margin="0,0,12,0" Command="{Binding OpenFolderCommand}" CommandParameter="icons" HorizontalContentAlignment="Left" Padding="18,14" Background="{StaticResource PeachBrush}">
+                        <Button Style="{StaticResource PillWhite}" Margin="0,0,12,0" Command="{Binding OpenFolderCommand}" CommandParameter="icons" HorizontalContentAlignment="Left" Padding="18,14" Background="{DynamicResource PeachBrush}">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource Icon}" Text="&#xEB9F;" FontSize="20" HorizontalAlignment="Left" />
                                 <TextBlock Text=".\Icons\" FontWeight="SemiBold" Margin="0,8,0,0" />
                                 <TextBlock Text="Icon trích xuất" Style="{StaticResource Caption}" />
                             </StackPanel>
                         </Button>
-                        <Button Style="{StaticResource PillWhite}" Margin="0,0,12,0" Command="{Binding OpenFolderCommand}" CommandParameter="logs" HorizontalContentAlignment="Left" Padding="18,14" Background="{StaticResource LavenderBrush}">
+                        <Button Style="{StaticResource PillWhite}" Margin="0,0,12,0" Command="{Binding OpenFolderCommand}" CommandParameter="logs" HorizontalContentAlignment="Left" Padding="18,14" Background="{DynamicResource LavenderBrush}">
                             <StackPanel>
                                 <TextBlock Style="{StaticResource Icon}" Text="&#xE9F9;" FontSize="20" HorizontalAlignment="Left" />
                                 <TextBlock Text=".\Logs\" FontWeight="SemiBold" Margin="0,8,0,0" />
@@ -469,7 +469,7 @@
                                 <ItemsControl ItemsSource="{Binding InstallerFiles}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderBrush="{StaticResource LineBrush}" BorderThickness="0,0,0,1" Padding="0,7">
+                                            <Border BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,0,1" Padding="0,7">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
@@ -478,9 +478,9 @@
                                                         <ColumnDefinition Width="130" />
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
-                                                    <TextBlock Grid.Column="1" Text="{Binding Owner}" Foreground="{StaticResource MutedBrush}" TextTrimming="CharacterEllipsis" />
+                                                    <TextBlock Grid.Column="1" Text="{Binding Owner}" Foreground="{DynamicResource MutedBrush}" TextTrimming="CharacterEllipsis" />
                                                     <TextBlock Grid.Column="2" Text="{Binding SizeText}" />
-                                                    <TextBlock Grid.Column="3" Text="{Binding Modified}" Foreground="{StaticResource MutedBrush}" />
+                                                    <TextBlock Grid.Column="3" Text="{Binding Modified}" Foreground="{DynamicResource MutedBrush}" />
                                                 </Grid>
                                             </Border>
                                         </DataTemplate>
@@ -511,12 +511,65 @@
                 </StackPanel>
                 <ScrollViewer>
                     <StackPanel Margin="0,0,0,80" MaxWidth="760" HorizontalAlignment="Left">
+                        <!-- Giao diện -->
                         <Border Style="{StaticResource WhiteCard}" Padding="24" Margin="0,0,0,14">
                             <StackPanel>
-                                <TextBlock Text="Cài đặt &amp; Cập nhật" Style="{StaticResource H3}" />
+                                <TextBlock Text="Giao diện" Style="{StaticResource H3}" />
+                                <TextBlock Text="Chế độ tối giúp dịu mắt khi làm việc lâu hoặc trong phòng thiếu sáng. Đổi ngay, không cần khởi động lại."
+                                           Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,2,0,12" />
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton Style="{StaticResource SegmentButton}" GroupName="Theme" AutomationProperties.Name="Giao diện sáng"
+                                                 IsChecked="{Binding ThemeMode, Converter={StaticResource EnumToBool}, ConverterParameter=Light}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource Icon}" Text="&#xE706;" FontSize="13" Margin="0,0,8,0" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                                            <TextBlock Text="Sáng" />
+                                        </StackPanel>
+                                    </RadioButton>
+                                    <RadioButton Style="{StaticResource SegmentButton}" GroupName="Theme" AutomationProperties.Name="Giao diện tối"
+                                                 IsChecked="{Binding ThemeMode, Converter={StaticResource EnumToBool}, ConverterParameter=Dark}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource Icon}" Text="&#xE708;" FontSize="13" Margin="0,0,8,0" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                                            <TextBlock Text="Tối (dịu mắt)" />
+                                        </StackPanel>
+                                    </RadioButton>
+                                    <RadioButton Style="{StaticResource SegmentButton}" GroupName="Theme" AutomationProperties.Name="Giao diện theo Windows"
+                                                 IsChecked="{Binding ThemeMode, Converter={StaticResource EnumToBool}, ConverterParameter=System}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource Icon}" Text="&#xE7F4;" FontSize="13" Margin="0,0,8,0" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                                            <TextBlock Text="Theo Windows" />
+                                        </StackPanel>
+                                    </RadioButton>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Cập nhật ứng dụng -->
+                        <Border Style="{StaticResource WhiteCard}" Padding="24" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="Cập nhật Auto Install All" Style="{StaticResource H3}" />
+                                <TextBlock Text="{Binding AppVersionText}" FontWeight="SemiBold" Margin="0,4,0,0" />
+                                <TextBlock Text="{Binding AppUpdateStatus}" Style="{StaticResource Caption}" TextWrapping="Wrap" Margin="0,2,0,12" />
+                                <WrapPanel>
+                                    <Button Style="{StaticResource PillDark}" Margin="0,0,10,0" Command="{Binding CheckAppUpdateCommand}" AutomationProperties.Name="Kiểm tra cập nhật">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Style="{StaticResource Icon}" Text="&#xE895;" FontSize="13" Margin="0,0,8,0" />
+                                            <TextBlock Text="Kiểm tra cập nhật" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Style="{StaticResource PillButton}" Background="{DynamicResource MintBrush}" Margin="0,0,10,0"
+                                            Command="{Binding InstallAppUpdateCommand}" Content="Tải &amp; cập nhật ngay"
+                                            Visibility="{Binding HasAppUpdate, Converter={StaticResource BoolToVisibility}}" />
+                                    <Button Style="{StaticResource PillButton}" Command="{Binding OpenReleasesPageCommand}" Content="Xem trên GitHub" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource WhiteCard}" Padding="24" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="Cài đặt &amp; Tải bộ cài" Style="{StaticResource H3}" />
                                 <TextBlock Text="Timeout mỗi ứng dụng (phút)" Style="{StaticResource FieldLabel}" />
                                 <TextBox Style="{StaticResource Field}" Width="160" HorizontalAlignment="Left" Text="{Binding SettingTimeoutMinutes, UpdateSourceTrigger=PropertyChanged}" />
-                                <CheckBox Style="{StaticResource AppChip}" Margin="0,16,0,0" Background="{StaticResource BeigeBrush}" IsChecked="{Binding SettingVerifySha256}"
+                                <CheckBox Style="{StaticResource AppChip}" Margin="0,16,0,0" Background="{DynamicResource BeigeBrush}" IsChecked="{Binding SettingVerifySha256}"
                                           Content="Bắt buộc khớp SHA-256 khi tải bản mới" HorizontalAlignment="Left" />
                                 <CheckBox Style="{StaticResource AppChip}" Margin="0,10,0,0" IsChecked="{Binding SettingDeleteOldInstaller}"
                                           Content="Tự xoá bộ cài cũ sau khi tải bản mới thành công" HorizontalAlignment="Left" />
@@ -552,7 +605,7 @@
                             </StackPanel>
                         </Button>
                         <TextBlock Style="{StaticResource Caption}" Margin="0,24,0,0">
-                            <Run Text="Auto Install All v1.0 · " />
+                            <Run Text="Auto Install All · " />
                             <Run Text="{Binding ModeText, Mode=OneWay}" />
                             <Run Text=" · " />
                             <Run Text="{Binding RootPath, Mode=OneWay}" />
@@ -562,13 +615,13 @@
             </DockPanel>
 
             <!-- ===================== Thanh tác vụ nổi (mọi trang) ===================== -->
-            <Border VerticalAlignment="Bottom" Margin="0,0,16,8" CornerRadius="22" Background="{StaticResource InkBrush}" Padding="20,12"
+            <Border VerticalAlignment="Bottom" Margin="0,0,16,8" CornerRadius="22" Background="{DynamicResource InkBrush}" Padding="20,12"
                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}">
                 <DockPanel>
                     <Button DockPanel.Dock="Right" Style="{StaticResource PillSmall}" Command="{Binding CancelOperationCommand}" Content="Huỷ" Margin="12,0,0,0" />
-                    <TextBlock DockPanel.Dock="Left" Text="{Binding BusyMessage}" Foreground="White" FontWeight="SemiBold" Width="320"
+                    <TextBlock DockPanel.Dock="Left" Text="{Binding BusyMessage}" Foreground="{DynamicResource WhiteBrush}" FontWeight="SemiBold" Width="320"
                                TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                    <ProgressBar Style="{StaticResource PastelBar}" Height="8" Background="#33FFFFFF" Foreground="{StaticResource MintBrush}"
+                    <ProgressBar Style="{StaticResource PastelBar}" Height="8" Background="{DynamicResource InkTrackBrush}" Foreground="{DynamicResource MintBrush}"
                                  Value="{Binding BusyProgress, Mode=OneWay}" VerticalAlignment="Center" />
                 </DockPanel>
             </Border>
@@ -588,12 +641,12 @@
                 <!-- Khối 1: Bộ nhớ USB & BitLocker -->
                 <StackPanel>
                     <DockPanel>
-                        <Border Width="48" Height="48" CornerRadius="24" Background="{StaticResource WhiteBrush}" Margin="0,0,14,0" VerticalAlignment="Top">
+                        <Border Width="48" Height="48" CornerRadius="24" Background="{DynamicResource WhiteBrush}" Margin="0,0,14,0" VerticalAlignment="Top">
                             <TextBlock Style="{StaticResource Icon}" Text="&#xE88E;" FontSize="20" />
                         </Border>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="Bộ nhớ USB (.\Installers\)" FontSize="17" FontWeight="Bold" />
-                            <TextBlock Text="{Binding UsbSummary}" FontSize="13" Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap" Margin="0,2,0,0"
+                            <TextBlock Text="{Binding UsbSummary}" FontSize="13" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,2,0,0"
                                        ToolTip="{Binding UsbSizeText}" />
                         </StackPanel>
                     </DockPanel>
@@ -604,19 +657,27 @@
                             <TextBlock Text="{Binding BitLockerText}" FontSize="13" FontWeight="SemiBold" TextTrimming="CharacterEllipsis">
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+                                        <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding BitLockerIsOff}" Value="True">
-                                                <Setter Property="Foreground" Value="{StaticResource SuccessBrush}" />
+                                                <Setter Property="Foreground" Value="{DynamicResource SuccessBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
-                            <ProgressBar Style="{StaticResource PastelBar}" Height="6" Margin="0,8,0,0" Foreground="{StaticResource LavenderBrush}"
+                            <ProgressBar Style="{StaticResource PastelBar}" Height="6" Margin="0,8,0,0" Foreground="{DynamicResource LavenderBrush}"
                                          Value="{Binding BitLocker.DecryptionProgress, Mode=OneWay, FallbackValue=0}"
                                          Visibility="{Binding IsBitLockerBusy, Converter={StaticResource BoolToVisibility}}" />
                         </StackPanel>
+                    </Button>
+
+                    <!-- Chuẩn hóa Desktop & Menu -->
+                    <Button Style="{StaticResource PillButton}" Background="{DynamicResource MintBrush}" Margin="0,10,0,0" Padding="14,10"
+                            HorizontalContentAlignment="Left" Command="{Binding ApplyDesktopTweaksCommand}"
+                            AutomationProperties.Name="Chuẩn hóa Desktop và Menu"
+                            ToolTip="Hiện icon This PC, Thư mục người dùng, Network, Control Panel ra Desktop; bật menu chuột phải đầy đủ (Windows 11); hiện đuôi file">
+                        <TextBlock Text="✨ Chuẩn hóa Desktop &amp; Menu" FontSize="13" />
                     </Button>
                 </StackPanel>
 
@@ -624,10 +685,10 @@
                 <Border Grid.Row="1" Style="{StaticResource WhiteCard}" Margin="0,14,0,14" Padding="20,18">
                     <DockPanel>
                         <UniformGrid DockPanel.Dock="Bottom" Columns="2">
-                            <Button Style="{StaticResource PillButton}" Background="{StaticResource LavenderBrush}" Margin="0,0,6,0" Padding="10,12"
+                            <Button Style="{StaticResource PillButton}" Background="{DynamicResource LavenderBrush}" Margin="0,0,6,0" Padding="10,12"
                                     HorizontalContentAlignment="Center" Command="{Binding InstallVcRedistCommand}"
                                     ToolTip="{Binding VcRedist.VersionLabel, FallbackValue=Visual C++ Redistributable}" Content="Cài Visual C++" />
-                            <Button Style="{StaticResource PillButton}" Background="{StaticResource PeachBrush}" Margin="6,0,0,0" Padding="10,12"
+                            <Button Style="{StaticResource PillButton}" Background="{DynamicResource PeachBrush}" Margin="6,0,0,0" Padding="10,12"
                                     HorizontalContentAlignment="Center" Command="{Binding InstallDirectXCommand}"
                                     ToolTip="{Binding DirectX.VersionLabel, FallbackValue=DirectX}" Content="Cài DirectX" />
                         </UniformGrid>
@@ -656,10 +717,10 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Grid Margin="0,0,0,8">
-                                            <ProgressBar Style="{StaticResource PastelBar}" Height="30" Tag="10" Background="{StaticResource CreamBrush}"
+                                            <ProgressBar Style="{StaticResource PastelBar}" Height="30" Tag="10" Background="{DynamicResource CreamBrush}"
                                                          Foreground="{Binding Fill}" Value="{Binding Percent, Mode=OneWay}" />
                                             <DockPanel Margin="12,0" VerticalAlignment="Center">
-                                                <TextBlock DockPanel.Dock="Right" Text="{Binding Detail}" FontSize="12" Foreground="{StaticResource MutedBrush}" />
+                                                <TextBlock DockPanel.Dock="Right" Text="{Binding Detail}" FontSize="12" Foreground="{DynamicResource MutedBrush}" />
                                                 <TextBlock Text="{Binding Label}" FontWeight="SemiBold" FontSize="12.5" />
                                             </DockPanel>
                                         </Grid>
@@ -667,30 +728,33 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                             <TextBlock Text="{Binding SplitPlanText}" Style="{StaticResource Caption}" Margin="0,6,0,0" TextWrapping="Wrap"
-                                       Foreground="{StaticResource DangerBrush}"
+                                       Foreground="{DynamicResource DangerBrush}"
                                        Visibility="{Binding IsSplitPlanValid, Converter={StaticResource BoolToVisibility}, ConverterParameter=invert}" />
                         </StackPanel>
                     </DockPanel>
                 </Border>
 
                 <!-- Khối 3: Nút hành động chính kiêm thanh tiến trình -->
-                <Button Grid.Row="2" Command="{Binding StartAutoSetupCommand}" AutomationProperties.Name="Bắt đầu cài đặt ngay" Cursor="Hand"
+                <StackPanel Grid.Row="2">
+                <CheckBox IsChecked="{Binding ApplyTweaksWithSetup}" Margin="4,0,0,10" Cursor="Hand" VerticalContentAlignment="Center"
+                          Content="Chuẩn hóa Desktop &amp; Menu sau khi cài xong" FontSize="13" Foreground="{DynamicResource InkBrush}" />
+                <Button Command="{Binding StartAutoSetupCommand}" AutomationProperties.Name="Bắt đầu cài đặt ngay" Cursor="Hand"
                         ToolTip="Cài đặt tự động các phần mềm đã chọn (bấm lần nữa khi đang chạy để huỷ)">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
-                            <Border x:Name="Bd" CornerRadius="20" Background="#F28B72" MinHeight="104">
+                            <Border x:Name="Bd" CornerRadius="20" Background="{DynamicResource CoralBrush}" MinHeight="104">
                                 <Grid>
                                     <ProgressBar Style="{StaticResource PastelBar}" Height="Auto" Tag="20" Background="Transparent"
-                                                 Foreground="#E0644A" Value="{Binding QueuePercent, Mode=OneWay}" />
+                                                 Foreground="{DynamicResource CoralStrongBrush}" Value="{Binding QueuePercent, Mode=OneWay}" />
                                     <DockPanel Margin="20,16">
-                                        <Border DockPanel.Dock="Right" Width="46" Height="46" CornerRadius="23" Background="{StaticResource InkBrush}"
+                                        <Border DockPanel.Dock="Right" Width="46" Height="46" CornerRadius="23" Background="{DynamicResource InkBrush}"
                                                 VerticalAlignment="Center" Margin="12,0,0,0">
-                                            <TextBlock x:Name="Glyph" Style="{StaticResource Icon}" Text="&#xE768;" Foreground="White" FontSize="16" />
+                                            <TextBlock x:Name="Glyph" Style="{StaticResource Icon}" Text="&#xE768;" Foreground="{DynamicResource WhiteBrush}" FontSize="16" />
                                         </Border>
                                         <StackPanel VerticalAlignment="Center">
                                             <TextBlock x:Name="Title" Text="{Binding StartTitle}" FontSize="17" FontWeight="Black"
-                                                       Foreground="{StaticResource InkBrush}" TextWrapping="Wrap" />
-                                            <TextBlock Text="{Binding QueueStatus}" FontSize="13" Foreground="#1F2937" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" />
+                                                       Foreground="{DynamicResource OnCoralBrush}" TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding QueueStatus}" FontSize="13" Foreground="{DynamicResource OnCoralSubtleBrush}" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" />
                                         </StackPanel>
                                     </DockPanel>
                                 </Grid>
@@ -717,6 +781,7 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+                </StackPanel>
             </Grid>
         </Border>
     </Grid>

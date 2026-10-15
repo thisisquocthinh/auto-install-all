@@ -51,6 +51,16 @@ public enum ColorGroup
     Mint      // #C3F0DC — Nhắn tin & Thêm ứng dụng
 }
 
+/// <summary>Giao diện: Sáng (Warm Pastel), Tối (dịu mắt) hoặc theo cài đặt Windows.</summary>
+[JsonConverter(typeof(JsonStringEnumConverter<UiThemeMode>))]
+public enum UiThemeMode
+{
+    Light,
+    Dark,
+    System
+}
+
+/// <summary>Giá trị cũ của manifest (giữ để đọc được manifest.json đời đầu; không còn dùng).</summary>
 [JsonConverter(typeof(JsonStringEnumConverter<AppTheme>))]
 public enum AppTheme
 {

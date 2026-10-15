@@ -7,6 +7,9 @@ namespace AutoInstallAll.Models;
 public sealed class ManifestSettings
 {
     public AppTheme Theme { get; set; } = AppTheme.DarkGlass;
+
+    /// <summary>Giao diện Sáng / Tối / Theo Windows (trang Cài đặt).</summary>
+    public UiThemeMode UiTheme { get; set; } = UiThemeMode.Light;
     public int InstallTimeoutMinutes { get; set; } = 10;
     public bool VerifySha256 { get; set; } = true;
     public bool DeleteOldInstallerAfterUpdate { get; set; } = true;
@@ -16,7 +19,7 @@ public sealed class ManifestSettings
     public int DefaultDataDriveSizeGB { get; set; } = 350;
     public string DefaultDataDriveLetter { get; set; } = "D";
     public string DefaultDataDriveLabel { get; set; } = "DATA";
-    public string HttpUserAgent { get; set; } = "AutoInstallAll/1.0";
+    public string HttpUserAgent { get; set; } = "AutoInstallAll/1.0.1";
 }
 
 /// <summary>Nội dung file .\manifest.json nằm cạnh AutoInstallAll.exe.</summary>

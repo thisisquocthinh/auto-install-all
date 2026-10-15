@@ -15,7 +15,7 @@
     <AssemblyName>AutoInstallAll</AssemblyName>
     <RootNamespace>AutoInstallAll</RootNamespace>
     <Product>Auto Install All - Windows PC Setup Toolkit</Product>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
 
     <!-- UAC: requireAdministrator -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -48,6 +48,7 @@
 
   <!-- manifest.json mẫu được chép cạnh .exe (không nhúng) để kỹ thuật viên sửa trực tiếp trên USB -->
   <ItemGroup>
+    <None Include="Chay_Cong_Cu_USB.bat" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
     <None Include="manifest.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
   </ItemGroup>
 
